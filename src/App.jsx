@@ -6,8 +6,7 @@ import Register from "./pages/Register";
 import Upload from "./pages/Upload";
 import Dashboard from "./pages/Dashboard";
 import Contact from "./pages/Contact";
-import ProtectedRoute from "./components/ProtectedRoute";
-
+import ProtectedRoute from "./Components/ProtectedRoute";
 function App() {
   return (
     <Routes>
