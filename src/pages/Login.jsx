@@ -46,7 +46,7 @@ function Login() {
 
       alert("Login Successful");
 
-      navigate("/upload");
+      navigate("/");
 
     } catch (error) {
 
