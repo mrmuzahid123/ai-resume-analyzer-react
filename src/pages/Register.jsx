@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../services/api";
 import "../assets/css/register.css";
 
 function Register() {
@@ -45,31 +46,25 @@ function Register() {
 
     try {
 
-      const response = await fetch("http://127.0.0.1:5000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        })
+      const response = await API.post("/register", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
       });
 
-      const data = await response.json();
+      alert(response.data.message);
 
-      if (response.ok) {
-        alert("Registration Successful");
-
-        navigate("/login");
-      } else {
-        alert(data.message);
-      }
+      navigate("/login");
 
     } catch (error) {
 
-      alert("Server Error");
+      console.log(error);
+
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Server Error");
+      }
 
     }
 
@@ -150,6 +145,7 @@ function Register() {
           <button
             type="submit"
             className="register-btn"
+            disabled={loading}
           >
             {loading ? "Creating Account..." : "Create Account"}
           </button>
@@ -157,11 +153,8 @@ function Register() {
         </form>
 
         <p className="login-link">
-
           Already have an account?
-
           <Link to="/login"> Login</Link>
-
         </p>
 
       </div>

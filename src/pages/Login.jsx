@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../services/api";
 import "../assets/css/login.css";
 
 function Login() {
@@ -35,41 +36,27 @@ function Login() {
 
     try {
 
-      const response = await fetch("http://127.0.0.1:5000/login", {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
-
+      const response = await API.post("/login", {
+        email: formData.email,
+        password: formData.password
       });
 
-      const data = await response.json();
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      if (response.ok) {
+      alert("Login Successful");
 
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        alert("Login Successful");
-
-        navigate("/dashboard");
-
-      } else {
-
-        alert(data.message);
-
-      }
+      navigate("/dashboard");
 
     } catch (error) {
 
-      alert("Server Error");
+      console.log(error);
+
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Server Error");
+      }
 
     }
 
@@ -133,6 +120,7 @@ function Login() {
           <button
             type="submit"
             className="login-btn"
+            disabled={loading}
           >
             {loading ? "Logging In..." : "Login"}
           </button>
