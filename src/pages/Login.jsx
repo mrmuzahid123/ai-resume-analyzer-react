@@ -15,12 +15,10 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-
   };
 
   const handleSubmit = async (e) => {
@@ -41,6 +39,8 @@ function Login() {
         password: formData.password
       });
 
+      console.log("Login Response:", response.data);
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
@@ -50,17 +50,29 @@ function Login() {
 
     } catch (error) {
 
-      console.log(error);
+      console.error("Login Error:", error);
 
       if (error.response) {
-        alert(error.response.data.message);
+
+        console.log("Backend Error:", error.response.data);
+
+        alert(error.response.data.message || "Login Failed");
+
+      } else if (error.request) {
+
+        alert("Cannot connect to server.");
+
       } else {
-        alert("Server Error");
+
+        alert(error.message);
+
       }
 
-    }
+    } finally {
 
-    setLoading(false);
+      setLoading(false);
+
+    }
 
   };
 
@@ -128,11 +140,8 @@ function Login() {
         </form>
 
         <p className="register-link">
-
           Don't have an account?
-
           <Link to="/register"> Register</Link>
-
         </p>
 
       </div>

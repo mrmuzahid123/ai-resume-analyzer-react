@@ -9,6 +9,7 @@ function Upload() {
 
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState("No file selected");
+    const [loading, setLoading] = useState(false);
 
     const handleFileChange = (e) => {
 
@@ -28,8 +29,15 @@ function Upload() {
             return;
         }
 
-        // Get Logged-in User
         const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user || !user.email) {
+            alert("Please login first.");
+            navigate("/login");
+            return;
+        }
+
+        setLoading(true);
 
         const formData = new FormData();
 
@@ -44,9 +52,9 @@ function Upload() {
                 },
             });
 
-            alert(response.data.message);
+            console.log("Upload Response:", response.data);
 
-            console.log(response.data);
+            alert(response.data.message);
 
             navigate("/dashboard", {
                 state: response.data,
@@ -54,15 +62,26 @@ function Upload() {
 
         } catch (error) {
 
-            console.log(error);
+            console.error("Upload Error:", error);
 
-            alert("Upload Failed");
+            if (error.response) {
+                alert(error.response.data.message || "Upload Failed");
+            } else if (error.request) {
+                alert("Cannot connect to backend server.");
+            } else {
+                alert(error.message);
+            }
+
+        } finally {
+
+            setLoading(false);
 
         }
 
     };
 
     return (
+
         <div className="upload-page">
 
             <div className="upload-card">
@@ -100,13 +119,15 @@ function Upload() {
                 <button
                     className="analyze-btn"
                     onClick={handleUpload}
+                    disabled={loading}
                 >
-                    Analyze Resume
+                    {loading ? "Analyzing Resume..." : "Analyze Resume"}
                 </button>
 
             </div>
 
         </div>
+
     );
 }
 
