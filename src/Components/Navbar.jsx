@@ -27,29 +27,41 @@ function Navbar() {
         </div>
 
         <ul className="nav-links">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/">Features</Link></li>
-          <li><Link to="/upload">Upload Resume</Link></li>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
+
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+
+          <li>
+            <a href="#features">Features</a>
+          </li>
+
+          <li>
+            <Link to="/upload">Upload Resume</Link>
+          </li>
+
+          <li>
+            <Link to="/dashboard">Dashboard</Link>
+          </li>
+
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+
         </ul>
 
         {
           token ? (
-
             <button
               className="nav-login-btn"
               onClick={handleLogout}
             >
               Logout
             </button>
-
           ) : (
-
             <Link to="/login" className="nav-login-btn">
               Login
             </Link>
-
           )
         }
 
